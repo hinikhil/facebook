@@ -1,0 +1,66 @@
+<div class="login-section" style="background-image: url('dist/img/bg.png');">
+  <div class="container">
+    <div class="login-block">
+    <form name="LoginForm">
+      <div class="row-table">
+        <div class="col-cell">
+          <div class="form-block">
+            <div class="logo-block text-center"><img src="dist/img/bizit.png" style="width:80px;"></div>
+            <div class="whitebg-section">
+              <div class="row">
+
+                <div class="col-sm-12">
+                  <div class="form-group clearfix">
+                  <label class="control-label col-md-12">Email</label>
+                    <input type="email" class="form-control" name="Email" placeholder="email@email.com" ng-pattern="/^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/" ng-model="Email" required>
+                    <span style="color:red;" ng-show="LoginForm.Email.$dirty && LoginForm.Email.$invalid">
+                     <span ng-show="LoginForm.Email.$error.required">Email is required.</span>
+                     <span ng-show="LoginForm.Email.$error.pattern">Only Valid email !</span>
+                     </span>
+                 </div>
+               </div>
+               
+               <div class="form-group clearfix">                
+                <div class="col-sm-12">
+                <label class="control-label col-md-12">Password</label>
+                  <input type="password" class="form-control" ng-model="Password" name="Password" placeholder="Password" max="8" ng-pattern="/^[a-zA-Z0-9@*#]{8,15}$/" required>
+                  <span style="color:red;" ng-show="LoginForm.Password.$dirty && LoginForm.Password.$invalid">
+                   <span ng-show="LoginForm.Password.$error.required">Password is required.</span>
+                   <span ng-show="LoginForm.Password.$error.pattern">Password Should consist of one symbol atleast one Capital Letter and Number.</span>
+                    </span>
+               </div>
+             </div>
+
+
+             <div class="form-group m-t-20 button-block clearfix">
+              <div class="col-sm-12">    
+                <span> 
+                 <label class="control-label col-md-12">Click For : 
+                  <a type="button" ui-sref="signup">SignUp</a></label>
+                  <label class="control-label col-md-12">Click For : 
+                    <a href="#forgetpassword" >Forgot Password</a></label>
+                  </span>  
+                  <br>
+                  <button type="button" ng-click="login()" class="btn btn-block btn-blue">Login</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+          

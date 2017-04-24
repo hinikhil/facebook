@@ -1,0 +1,40 @@
+<div class="login-section" style="background-image: url('dist/img/bg.png');">
+<div class="container">
+    <div class="login-block">
+      <div class="row-table">
+        <div class="col-cell">
+          <div class="form-block">
+
+<div style="background-color:lightblue">
+  <h1 align="center" style="margin-top:5%;background-color:#69C">Update Password</h1>
+  <div style="border:1px solid; height:1150px; width:500px; padding-left:20px; margin-left:50px; margin-left:35%; margin-top:3%; background-color:#69C">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <form name="myForm" ng-app=""  novalidate>
+      <p style="font-size:20px; color:white"> Enter New Password :</p> 
+      <input type="password"  maxlength="15" placeholder=" Password" name="pass" ng-model="password" required style="height:30px; width:470px">
+      
+      <span style="color:red" ng-if="password.length < 6 ">weak password</span>
+      <span style="color:blue" ng-if="password.length > 5 && password.length < 10">good password</span>
+      <span style="color:green" ng-if="password.length > 9 ">strong password</span>
+      <span style="color:red" ng-show="myForm.pass.$dirty && myForm.pass.$invalid">
+        <span ng-show="myForm.pass.$error.required">Password is required.</span>
+      </span></br>
+
+      <p style="font-size:20px; color:white"> Confirm New password : </p>
+      <input type="password" placeholder="Confirm password " name="cpassword" ng-model="pass" required style="height:30px; width:470px">
+      <span style="color:red" ng-show="myForm.cpassword.$dirty && myForm.cpassword.$invalid">
+      </span>
+      <span style="color:red" ng-if="pass!= password&&pass!=null" >Password not matched.</span>
+    </span></br>
+       
+     <button ng-click="update()" style="height:50px; width:140px; font-size:17px; margin-top:15px; background-color:lightblue; color:black" >submit</button>
+     
+   </form>
+
+ </div> 
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

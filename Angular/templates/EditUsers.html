@@ -1,0 +1,90 @@
+<div class="top-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="logo-part">
+                    <img src="dist/img/bizit.png" style="width: 80px;"><strong> Mobiloitte</strong> 
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="logout-part text-right">
+                   <a type="button" class="btn btn-logout" ng-href="#Login" > Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="header-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="title-part">
+                    <strong>Edit User.</strong>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="title-name text-right">
+                    Dear Admin
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="organization-section">
+    <div class="login-block">
+        <div class="row-table">
+            <div class="col-cell">
+                <form name="myForm1" class="form-horizontal">
+                    <div class="form-block">
+                        <div class="trans-section">
+                            <div class="row">
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-12">First Name</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" ng-model="editFirstName" placeholder="Enter first name" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="control-label col-md-12">Last Name</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" ng-model="editLastName" placeholder="Enter last name" required>
+                                    </div>                  
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="control-label col-md-12">User Role</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" ng-model="editUserRole" placeholder="User Role" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="control-label col-md-12">Email Address</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" ng-model="editEmail" placeholder="Email Address" required>
+                                    </div>                  
+                                </div>
+                                 <div class="row">
+                                    <label class="control-label col-md-12">Address</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" ng-model="editAddress" placeholder="Address" required>
+                                    </div>                  
+                                </div> 
+                                <div class="row">
+                                    <label class="control-label col-md-12">Status</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" ng-model="editStatus" placeholder="Status" required>
+                                    </div>                  
+                                </div>                                  
+                                <div class="form-group m-t-20 text-right textclearfix">
+                                    <div class="col-sm-12">
+                                        <button type="button" ng-click="
+                                        saveChanges()" class="btn btn-blue">Save Changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

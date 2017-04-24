@@ -1,0 +1,97 @@
+    <div class="top-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="logo-part">
+                        <img src="dist/img/bizit.png" style="width: 50px;"><strong> Mobiloitte</strong>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="logout-part text-right">
+                        <a type="button" class="btn btn-logout" ng-href="#Login" > Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="title-part">
+                        <strong>Welcome <!-- <label ng-bind ="FirstName"></label> --></strong>
+                   <!--      <ng-bind ="AdminType"> -->
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="title-name text-right" ng-show="isVisible">
+                           <a type="button" class="btn light-blue" ng-href="#AddAdmin">Add Admin</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-section">
+        <div class="container">
+            <div class="inner-post">
+               
+                <div class="post-block m-t-20">
+                   <div class="text-right">
+                            <div class="btn light-blue" >Search by Keyword : </div>
+                            <input class="text-left" type="text" name="" ng-model="modelEmail" />
+                    </div>                 
+                    <br/>
+                   </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table custom-table">
+                            <thead>
+                                <tr>    
+                                <th>Index</th>
+                                    <th>Profile Image</th>
+                                    <th>User Name</th>
+                                    <th>Email</th>
+                                    <th>Jobs Done</th>                          
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="x in ListOfUsers|filter:modelEmail|startFrom:currentPage*pageSize|limitTo:pageSize">
+                                  <td>{{$index+1}}</td>
+                                    <td><img data-ng-src="data:image/png;base64,{{x.profileImage}}" style="width:30px"/></td>
+                                    <td>{{x.fullName}}</td>
+                                    <td>{{x.email}}</td>
+                                    <td>{{x.jobs}}</td>
+                                    
+                                      <td>{{x.status}}</td>
+                                   
+                                    <td>
+                                        <a type="button"  ng-href="#EditUsers/{{x._id}}">View</a>
+                                        <a type="button"  ng-click="delete(x._id);">Delete</a>
+                                        <a type="button"  ng-click="delete(x._id);">Block</a>
+                                    </td>
+                                 
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="pagination-block text-right">
+                    <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                        Previous
+                    </button>
+                    {{currentPage+1}}/{{numberOfPages()}}
+                    <button ng-disabled="currentPage >= ListOfUsers.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                        Next
+                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

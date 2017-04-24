@@ -1,0 +1,794 @@
+
+Previous Modification Made for Sheshnath
+
+
+
+//**********1***********//
+
+//------pandey
+// exports.login = function(req, res){
+// 	 console.log("login"+req.body.Email+"pass"+ req.body.Password);
+// 	UserSchema.findOne({Email:req.body.Email, Password:req.body.Password}, function(err, user_info){
+// 		if(err){
+// 			return res.json({ResponseCode:400, ResponseMessage:"Unexpected error"})
+// 		}else if(!user_info){
+// 			return res.json({ResponseCode:404, ResponseMessage: "Email/Password not correct."})
+// 		}else{
+		
+// 			res.send({ResponseCode: 200, ResponseMessage:"Success",UserId:user_info._id });
+// 		}
+// 	})
+// }
+//-------pandey
+
+//**********1***********//
+
+//**********2***********//
+
+// exports.userSignUp = function(req, res){
+// 	console.log("req body of userSignUp--", JSON.stringify(req.body));
+// 	var userSchema = new UserSchema(req.body);
+// 	userSchema.save(function(err, resultUser){
+// 		if(err){
+// 			res.send({ResponseCode:400, ResponseMessage: "Error"});
+// 			console.log(err);
+// 		}
+// 		else{
+			
+// 			res.send({ResponseCode: 200, ResponseMessage:"Success",UserId:resultUser._id});
+// 		}
+// 	});
+// }
+//**********2E***********//
+
+
+//**********3***********//
+//-----pandye
+// exports.showRoleData = function(req, res){
+// 	UserSchema.findOne({_id:req.body.UserId}).exec(function(err, result){
+// 		if(err){
+// 			res.send({ResponseCode:400, ResponseMessage: "Error"});
+// 			console.log(err);
+// 		}
+// 		else{
+
+// 					//return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+// 					if(result.UserRole=='King')
+// 					{
+// 						console.log("user is king ")
+// 						UserSchema.find().where('UserRole').in(['queen','boy','girl']).exec(function(err, user_info){
+// 							if(err){
+// 								res.send({ResponseCode:400, ResponseCode: "Error"});
+// 								console.log(err);
+// 							}
+// 							else{
+// 								return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+// 							}
+// 						})
+// 					}
+// 					else if (result.UserRole=='Queen')
+// 					{
+// 						console.log("user is queen")
+// 						UserSchema.find().where('UserRole').equals('girl').exec(function(err, user_info){
+// 							if(err){
+// 								res.send({ResponseCode:400, ResponseMessage: "Error"});
+// 								console.log(err);
+// 							}else{
+// 								return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+// 							}
+// 						})
+// 					}
+// 					else if (result.UserRole=='Boy')
+// 					{
+// 						console.log("user is boy")
+// 						UserSchema.find().where('UserRole').equals('king').exec(function(err, user_info){
+// 							if(err){
+// 								res.send({ResponseCode:400, ResponseMessage: "Error"});
+// 								console.log(err);
+// 							}else{
+// 								return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+// 							}
+// 						})
+// 					}
+// 					else if (result.UserRole=='Girl')
+// 					{
+// 						console.log("user is girl")
+// 						UserSchema.find().where('UserRole').equals('boy').exec(function(err, user_info){
+// 							if(err){
+// 								res.send({ResponseCode:400, ResponseMessage: "Error"});
+// 								console.log(err);
+// 							}else{
+// 								return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+// 							}
+// 						})
+// 					}
+
+// 				}
+// 		})
+
+
+// }
+//-----pandey
+//**********3E***********//
+
+//**********4***********//
+//***********Pandey
+// exports.createProfile = function(req, res){
+//  	console.log("req body of createProfile" + JSON.stringify(req.body));
+
+//  		//update FEED
+//  	 	UserSchema.findOneAndUpdate({_id:req.body._id},req.body,{new:true}, function(err, updateResult){
+//  		if(err){
+// 			res.send({ResponseCode:400, ResponseMessage: "Error"});
+// 			console.log(err);
+// 		}else{
+// 			console.log("success-3");	
+// 		    res.send({ResponseCode:200, ResponseMessage: "Success"});
+// 		}
+//  	})
+
+
+//  }
+
+//-------Pandey
+//**********4E***********//
+
+
+	var update = {};
+	for (var key in req.body){
+		update[key] = req.body[key];
+		console.log("update", update);
+		key = key;
+	}
+	console.log("key", key);
+	console.log("update", update);
+	User.findOneAndUpdate({email:req.params.email}, {$set:update}, {new:true}, function(err, data){
+		if(err){
+			return res.json({code:400, message:err});
+		}
+		else if(!req.body){
+			return res.json({code:400, message:'Please enter all the fields'});
+		}
+		else{
+			return res.json({code:202, message:'Profile updated successfully.'});
+		}
+	
+//-------------------------------------------------Server.js start----------------------------------------------------------------//
+var express = require('express'),
+	app = express(),
+ 	bodyParser =  require('body-parser'),
+	config = require('./config'),
+	mongoose = require('mongoose'),
+	user_action = require('./user_action')
+    mongoose.Promise = global.Promise;
+    mongoose.connect(config.db);
+
+//cloudinary
+var cloudinary = require('cloudinary');
+
+//Setting Cloudinary configuration
+          cloudinary.config({ 
+         'cloud_name': config.cloudinary_cloud_name, 
+         'api_key': config.cloudinary_api_key, 
+         'api_secret': config.cloudinary_api_secret
+   });
+
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/');
+});
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/index.html');
+});
+
+app.use(bodyParser.urlencoded({extended:true}));
+
+app.use(bodyParser.json({
+    limit: '500mb'
+}));
+app.use(bodyParser.urlencoded({
+    limit: '500mb',
+    extended: true,
+    parameterLimit: 5000000
+}));
+
+app.use(express.static('Angular'));
+app.post('/userSignup',user_action.userSignup);//done
+app.post('/Login',user_action.login);//done
+app.post('/createProfile',user_action.createProfile);//update profile
+app.post('/storeImages',user_action.storeImages);// Image 
+app.post('/getLastImage',user_action.getLastImage);
+app.post('/storeImagesCloundinary',user_action.storeImagesCloundinary);//Store Images by 
+app.post('/showUserDetails',user_action.showUserDetails);
+app.post('/deleteUserDetails',user_action.deleteUserDetails);
+app.post('/showRoleData',user_action.showRoleData);// Master API for ALL Roles
+
+
+
+
+//ADMIN 
+app.post('/Admin/SignupAdmin',user_action.userSignup);//For Admin Signup by Admin
+app.get('/Admin/ListUsersAdmin',user_action.getAllAdmin);//  For Superadmin list of users
+
+
+//SUPERADMIN
+app.get('/Superadmin/ListUsersSuperadmin',user_action.getAllSuperAdmin);//  For Superadmin list of users
+app.post('/Superadmin/AddAdminDetailsSuperAdmin',user_action.userSignup);//For Admin Add by SuperAdmin
+
+
+//BOTH
+app.post('/SuperadminOrAdmin/LoginSuperadminOrAdmin',user_action.login);//For Superadmin/Admin Login
+app.put('/SuperadminOrAdmin/DeleteUserSuperadminOrAdmin',user_action.DeleteUserSuperadminOrAdmin);//For Superadmin/Admin disable status
+app.post('/SuperadminOrAdmin/FillDefaultDetailsSuperadminOrAdmin',user_action.FillDefaultDetailsSuperAdminOrAdmin);//For Superadmin/Admin showUserDetails
+app.post('/SuperadminOrAdmin/editUsersDetailsSuperadminOrAdmin',user_action.editUsersDetailsAdminOrSuperAdmin);//For Superadmin/Admin modify profile
+
+
+//Forget Password Collection.
+app.post('/forgetPassword',user_action.forgetPassword);//done
+app.post('/verifyOtp',user_action.verifyOtp);//done
+app.post('/updatePwd',user_action.updatePwd);//done
+
+
+// start the server
+app.listen(config.port,function(){
+	console.log("welcome to the node.js world" +config.port);
+});
+
+//-------------------------------------------------Server.js end----------------------------------------------------------------//
+
+
+
+
+//------------------------------------------------user_action.js start ---------------------------------------------------------//
+
+var express = require('express'),
+app = express(),
+bodyParser =  require('body-parser'),
+UserSchema = require('./models/userSchema'),
+config = require('./config'),
+jwt = require('jsonwebtoken');
+	//---------OTP MODIFY
+	var nodemailer = require('nodemailer');  
+    var fs = require('fs');
+    var config = require('./config');
+    var cloudinary = require('cloudinary');
+    var bcrypt = require('bcrypt');
+
+ //COMMON ERRORS--------------start-----------------------
+
+//1.return is done when res.json is to be used --> return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+//2.return not used when res.send is used ---> res.send({ResponseCode:200, ResponseMessage: "Profile Updated.",UserRole: updateResult.UserRole});
+//3.Mismatch between code and ResponseCode
+//4.sending ResponseCode=201  but checking ResponseCode=200
+//5.ng-model variables accessed by $scope
+//6.scope of method matters in cloudinary and bcrypt
+//7.it is faster to store images in url and send than saving images (images less than 20KB give better response)
+
+
+//---------------------------end-------------------------
+
+//----------------- All Checked ON ADvanced Rest Client ----------------//
+
+// For Seshnath Pandey Tested Apis
+exports.login = function(req, res){
+	console.log("login : "+req.body.Email+" Password : "+ req.body.Password);
+	 //a) Email field not empty
+	 if(req.body.Email=='')
+	 	return res.json({ResponseCode:401, ResponseMessage:"Email field is empty"})
+	// //  //b) Password field not empty
+	 if(req.body.Password=='')
+	 	return res.json({ResponseCode:401, ResponseMessage:"Password field is empty"})
+
+	// // //c) check Valid Email
+
+	// var emailPattern = (/^([a-zA-Z0-9@*#]{8,15})$/);
+	// 	return res.json({ResponseCode:401, ResponseMessage:"Not a valid Email"})
+
+	//d) check strong Password
+	//    var passwordPattern=(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/);
+	// 	//^		     				Start anchor
+	// 	//(?=.*\d)                  should contain at least one digit
+	// 	//(?=.*[a-z])               should contain at least one lower case
+	// 	//(?=.*[A-Z])               should contain at least one upper case
+	// 	//[a-zA-Z0-9]{8,}           should contain at least 8 from the mentioned characters
+	// 	//$							End anchor
+	// if(!passwordPattern.test(req.body.Password))	
+	// 	return res.json({ResponseCode:401, ResponseMessage:"Not a strong password"})
+
+ 	 UserSchema.findOne({Email:req.body.Email}, function(err, user_login_info){
+ 	 	if(err){
+ 	 		return res.json({ResponseCode:401, ResponseMessage:"Server error."})
+ 	 	}else if(!user_login_info){
+ 	 		return res.json({ResponseCode:401, ResponseMessage: "Incorrect Email"})
+ 	 	}else{
+			//email database me mil gaya ..now match password using bcrypt.compare
+			bcrypt.compare(req.body.Password, user_login_info.Password, function(err, result) {
+    		// res == true 
+    		if(result)
+    		{
+    			res.send({ResponseCode: 200, ResponseMessage:"Login Successful.",UserId: user_login_info._id,UserRole: user_login_info.UserRole,FirstName:user_login_info.FirstNamegetAllAdmin});
+
+    		}
+    		else {
+    			res.send({ResponseCode: 200, ResponseMessage:"Incorrect Password"});
+    		}			
+			});	//end of bcrypt scope			
+		}
+	})
+ 	}
+// For Singup
+exports.userSignup = function(req, res){
+	console.log("req body of userSignUp--", JSON.stringify(req.body)); 
+	 //a) Email field not empty
+	 if(req.body.Email=='')
+	 	return res.json({ResponseCode:401, ResponseMessage:"Email field is empty"})
+	// //  //b) Password field not empty
+	 if(req.body.Password=='')
+	 	return res.json({ResponseCode:401, ResponseMessage:"Password field is empty"})
+	 
+	 if(typeof req.body.UserRole=='undefined')
+	 	return res.json({ResponseCode:401, ResponseMessage:"UserRole in Required"})
+
+	// // //c) check Valid Email
+
+	// var emailPattern = (/^([a-zA-Z0-9@*#]{8,15})$/);
+	// 	return res.json({ResponseCode:401, ResponseMessage:"Not a valid Email"})
+
+	//d) check strong Password
+	   var passwordPattern=(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/);
+		//^		     				Start anchor
+		//(?=.*\d)                  should contain at least one digit
+		//(?=.*[a-z])               should contain at least one lower case
+		//(?=.*[A-Z])               should contain at least one upper case
+		//[a-zA-Z0-9]{8,}           should contain at least 8 from the mentioned characters
+		//$							End anchor
+	if(!passwordPattern.test(req.body.Password))	
+		return res.json({ResponseCode:401, ResponseMessage:"Not a strong password"})
+
+	UserSchema.findOne({Email:req.body.Email},function(err,result){
+		if(err){
+
+			 return res.json({ResponseCode:401, ResponseMessage: "Server Error."})
+		}
+		else if(result){
+   					//email found
+   				   res.send({ResponseCode: 401, ResponseMessage:"Email already exists"});
+   				}
+   				else{
+   						//email not found...save
+   						var bcryptPassword="";	
+   						bcrypt.hash(req.body.Password, 9, function(err, hash) {
+ 			 			// Store hash in your password DB. 
+			 			 bcryptPassword=hash;
+			 			 req.body.Password=bcryptPassword;
+			 			 console.log("bcryptPassword :" +bcryptPassword)
+			 			 var userSchema = new UserSchema(req.body);
+			 			 userSchema.save(function(err, resultUser){
+			 			 	if(err){
+			 			 			
+			 			 		res.send({ResponseCode:400, ResponseMessage: "Error."});
+			 			 		console.log(err);
+			 			 	}
+			 			 	else{
+			 			 			
+			 			 		res.send({ResponseCode: 200, ResponseMessage:"Success.", UserId:resultUser._id, UserRole:resultUser.UserRole});
+			 			 	}
+			 			 });
+
+						}); // end of bcrypt scope
+   					}
+   				}) //end of findOne scope
+}
+
+
+exports.createProfile = function(req, res){
+	 	console.log("req body of createProfile" + JSON.stringify(req.body));	 		
+	 		console.log("Create Profile --> UserId : "+req.body.UserId);	
+
+			//saving encoded images in request.body to cloud and then modifying the req.body
+			//if req.body.Image1!='' then do below
+			//req.body.Image1 -->binary-->store in cloudinary-->get URL-->req.body.Image1=result.url
+			//if req.body.Image2!='' then do below
+			//req.body.Image2 -->binary-->store in cloudinary-->get URL-->req.body.Image2=result.url
+	 	 	UserSchema.findOneAndUpdate({_id:req.body.UserId},req.body,{new:true}, function(err, updateResult){
+		 	if(err){
+			res.send({ResponseCode:400, ResponseMessage: "Error."});
+			console.log(err);
+		    }else if(updateResult!=null)
+		    {
+			//console.log("Create Profile Updated Rsult ------- > :" +updateResult);	
+			var LastImage="";		
+			if(updateResult.Image4!='')
+			{
+				LastImage=updateResult.Image4;
+			}
+			else if(updateResult.Image3!='')
+			{
+				LastImage=updateResult.Image3;
+			}
+			else if(updateResult.Image2!='')
+			{
+				LastImage=updateResult.Image2;
+			}
+			else if(updateResult.Image1!='')
+			{ 
+				LastImage=updateResult.Image1;
+			}
+
+//Store last image on cloud and get the url and send it.
+//--------start----------------//			
+//console.log("1 LastImage= " +LastImage);
+ 		var img_base64 = LastImage;
+ 		//b) we are creating binary image here from given base64 image
+ 		binaryData = new Buffer(img_base64, 'base64');
+ 		//console.log("2 binaryData=" +binaryData);  		
+   		// c) making image at server here and naming it as test.jpeg
+   		fs.writeFile("test.jpeg", binaryData, "binary", function (err) {
+	                if(err){
+		                console.log("error in writing file "+err+" and binarydata="+binaryData);
+	    	        }
+   		});
+//Step-2 :Setting Cloudinary configuration
+   	      cloudinary.config({ 
+	     'cloud_name': config.cloudinary_cloud_name, 
+	     'api_key': config.cloudinary_api_key, 
+	     'api_secret': config.cloudinary_api_secret
+   });
+   		//Step-3 :uploading created image test.jpeg in Step-1 on cloudinary
+   		 cloudinary.uploader.upload("test.jpeg",function(result) {	                 
+                 //checking the url of uploaded image sent to us by Cloudinary
+   		 console.log("image url ="+result.url);
+//--------end----------//		
+		 res.send({ResponseCode:200, ResponseMessage: "Profile Updated.", FeedList:updateResult, LastImage:LastImage , ImageURL:result.url });
+		});
+      }
+      else
+      {
+		res.send({ResponseCode:200, ResponseMessage: "No record Found"});
+
+      }
+ 	})
+ }
+exports.editUsersDetailsAdminOrSuperAdmin = function(req, res){
+		//admin will send the details in body and we will update it
+		//admin will not send Images so no need to store them in database or cloudinary hence removed that code
+		//no need to return Feedlist..just return ResponseCode:200, ResponseMessage: "Profile Updated."
+	 		console.log("req body of editUsersDetailsAdminOrSuperAdmin" + JSON.stringify(req.body));	 
+	 		console.log("modify Profile --> UserId : "+req.body.UserId);	
+	 	 	UserSchema.findOneAndUpdate({_id:req.body.UserId},req.body,{new:true}, function(err, updateResult){
+		 	if(err){
+			res.send({ResponseCode:400, ResponseMessage: "Error."});
+			console.log(err);
+		    }else if(updateResult!=null)
+		    	{
+			res.send({ResponseCode:200, ResponseMessage: "Profile Updated.",UserRole: updateResult.UserRole});
+    		  }
+    		  else
+    		  {
+			res.send({ResponseCode:200, ResponseMessage: "No record Found"});
+      }
+ 	})
+ }
+ exports.FillDefaultDetailsSuperAdminOrAdmin = function(req, res){
+ 	console.log(" ShowUserDetails req.body 1 =========: "+req.body.UserId);
+ 	var _id = req.body.UserId;
+ 	if(!_id){
+ 		return res.json({ResponseCode:400, ResponseMessage: "UserId is missing."})
+ 	}
+ 	UserSchema.findOne({_id:_id})
+ 	.exec(function(err, user_info){
+ 		if(err){
+ 			res.send({ResponseCode:400, ResponseMessage: "Error"});
+ 			console.log(err);
+ 		}else{
+ 			return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+ 		}
+ 	})
+ }
+
+ 
+ //------------------------------------- For Array end-------------------------------------------------/
+ exports.showRoleData = function(req, res){
+ 	UserSchema.findOne({_id:req.body.UserId}).exec(function(err, result){
+ 		if(err){
+ 			res.send({ResponseCode:400, ResponseMessage: "Error"});
+ 			console.log(err);
+ 		}
+ 		else{
+					//return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+					if(result.UserRole=='King')
+					{
+						console.log("showRoleData User is King : ")
+						UserSchema.find().where('UserRole').in(['Queen','Boy','Girl']).exec(function(err, user_info){
+							if(err){
+								res.send({ResponseCode:400, ResponseCode: "Error"});
+								console.log(err);
+							}
+							else{
+
+								return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+							}
+						})
+					}
+					else if (result.UserRole=='Queen')
+					{
+						console.log("showRoleData User is Queen")
+						UserSchema.find().where('UserRole').equals('Girl').exec(function(err, user_info){
+							if(err){
+								res.send({ResponseCode:400, ResponseMessage: "Error"});
+								console.log(err);
+							}else{
+								return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+							}
+						})
+					}
+					else if (result.UserRole=='Boy')
+					{
+						console.log("showRoleData User is Boy")
+						UserSchema.find().where('UserRole').equals('King').exec(function(err, user_info){
+							if(err){
+								res.send({ResponseCode:400, ResponseMessage: "Error"});
+								console.log(err);
+							}else{
+								return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+							}
+						})
+					}
+					else if (result.UserRole=='Girl')
+					{
+
+						console.log("showRoleData User is Girl")
+						UserSchema.find().where('UserRole').equals('Boy').exec(function(err, user_info){
+							if(err){
+								res.send({ResponseCode:400, ResponseMessage: "Error"});
+								console.log(err);
+							}else{
+								return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+							}
+						})
+					}
+					else if (result.UserRole=='Admin')
+					{
+						UserSchema.find().exec(function(err, user_info){
+							if(err){
+								return res.json({ResponseCode:400, ResponseMessage: "User not found."})
+							}else{
+								res.send({ResponseCode: 200, FeedList: user_info,ResponseMessage: "Success"});
+							}
+						})
+					}
+
+
+				}
+			})
+ }
+ exports.showUserDetails = function(req, res){
+ 	console.log(" ShowUserDetails req.body 1 =========: "+req.body.UserId);
+ 	var _id = req.body.UserId;
+ 	if(!_id){
+ 		return res.json({ResponseCode:400, ResponseMessage: "UserId is missing."})
+ 	}
+ 	UserSchema
+ 	.findOne({_id:_id})
+ 	.where('Status')
+ 	.equals('Active')
+ 	.exec(function(err, user_info){
+ 		if(err){
+ 			res.send({ResponseCode:400, ResponseMessage: "Error"});
+ 			console.log(err);
+ 		}else{
+ 			return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+ 		}
+ 	})
+ }
+//------------------------------------All are Checked and Working According To Pandey--------------------------------------//
+
+exports.deleteUserDetails = function(req, res){
+	console.log("In deleteUserDetails req.body"+req.body);
+	var _id = req.body.UserId;
+	if(!_id){
+		res.send({ResponseCode:400, ResponseMessage: "UserId is missing."})
+	}	
+	UserSchema.findOneAndUpdate({_id:_id},{$set:{Status:'Inactive'}},{new:true}, function(err, updateResult){
+		if(err){
+			res.send({ResponseCode:400, message: "Interal Server Error."});
+			console.log(err);
+		}else{
+			 res.send({ResponseCode:200, message:"User Deleted Successfully."});
+		}
+	})	
+}
+exports.DeleteUserSuperadminOrAdmin = function(req, res){
+	console.log("In DeleteUserSuperadminOrAdmin req.body"+req.body);
+	var _id = req.body.UserId;
+	if(!_id){
+		res.send({ResponseCode:400, ResponseMessage: "UserId is missing."})
+	}	
+	UserSchema.findOneAndUpdate({_id:_id},{$set:{Status:'Inactive'}},{new:true}, function(err, updateResult){
+		if(err){
+			res.send({ResponseCode:400, message: "Interal Server Error."});
+			console.log(err);
+		}else{
+			 res.send({ResponseCode:200, message:"User Deleted Successfully."});
+		}
+	})	
+}
+// for ALL King
+exports.getAllMinusKing = function(req, res){	
+	UserSchema.find().where('UserRole').in(['Queen','Boys','Girl']).exec(function(err, user_info){
+		if(err){
+			res.send({ResponseCode:400, ResponseCode: "Error"});
+			console.log(err);
+		}else{
+			return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+		}
+	})
+}
+
+// Fir Girsls
+exports.getGirls = function(req, res){
+	UserSchema.find().where('UserRole').equals('Girl').exec(function(err, user_info){
+		if(err){
+			res.send({ResponseCode:400, ResponseMessage: "Error"});
+			console.log(err);
+		}else{
+			return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+		}
+	})
+}
+// For Boys
+exports.getBoys = function(req, res){	
+	UserSchema.find().where('UserRole').equals('Boy').exec(function(err, user_info){
+		if(err){
+			res.send({ResponseCode:400, ResponseMessage: "Error"});
+			console.log(err);
+		}else{
+			return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+		}
+	})
+}
+// For King
+exports.getKings = function(req, res){
+	UserSchema.find().where('UserRole').equals('King').exec(function(err, user_info){
+		if(err){
+			res.send({ResponseCode:400, ResponseMessage: "Error"});
+			console.log(err);
+		}else{
+			return res.json({ResponseCode:200, FeedList:user_info,ResponseMessage: "Success"});
+		}
+	})
+}
+
+exports.getAllSuperAdmin = function(req,res){
+ 			UserSchema.find()
+ 			.where('UserRole')
+ 			.nin(['SuperAdmin'])
+ 			.exec(function(err, user_info){
+ 				if(err){
+ 					return res.json({ResponseCode:400, ResponseMessage: "User not found."})
+ 				}else{
+ 					res.send({ResponseCode: 200, FeedList: user_info,ResponseMessage: "Success"});
+ 				}
+ 			})
+}	
+exports.getAllAdmin = function(req,res){
+			console.log("API :"+req)
+ 			UserSchema.find()
+ 			.where('UserRole')
+ 			.nin(['Admin','SuperAdmin'])
+ 			.exec(function(err, user_info){
+ 				if(err){
+ 					return res.json({ResponseCode:400, ResponseMessage: "User not found."})
+ 				}else{
+ 					res.send({ResponseCode: 200, FeedList: user_info,ResponseMessage: "Success"});
+ 				}
+ 			})
+}	
+
+//------ Not Mentioned in Office Documents.
+//----- Mailer (otp) start
+exports.forgetPassword = function(req,res){
+	console.log("============================>"+req.body.Email);
+	if(!req.body.Email){
+		res.json({code:400,message:"Please enter valid Email Id."})
+	}
+	else
+	{
+		UserSchema.findOne({Email:req.body.Email},function(err,data){
+			if(err){
+				throw err;
+			}
+			else if(!data){
+				res.json({code:400, message:"Emain Id Dose't Exist."})
+			}else{
+				var smtpTransport = nodemailer.createTransport({
+					   service: "Gmail",
+					   auth: {
+					   	user: "nj7870@gmail.com",
+					   	pass: "Nikhil.1"
+					   }
+					});
+				var text="";
+				var otppossible ="1234567890asdfasdff";
+				for(var i=0;i<5;i++)
+				{
+					text += otppossible.charAt(Math.floor(Math.random() * otppossible.length));
+
+				}
+				console.log("otp---",text);
+					smtpTransport.sendMail({  //Email options
+						from: "nikhil9839181726@gmail.com", // sender address.  Must be the same as authenticated user if using Gmail.
+						to: req.body.Email, // receiver
+						subject: "Forget password otp", // subject
+						text: "Your otp is "+ text // body
+						}, function(error, response){  //callback
+							if(error){
+								console.log(error);
+								res.send({code:400, message:error})
+							}else{
+							//res.send({code:200, message:"mail sent."})
+							data.otp = text;
+							data.otpStatus = "otpSend";
+							data.save(function(err,data){
+								if(err){
+									return res.json({code:400,message:"not found"})
+								}else{
+									return res.json({code:200,data:data})
+								}
+							})
+						}
+					});
+				}
+			})
+	}
+}
+exports.verifyOtp= function(req,res){
+	if(!req.body.otp){
+		return res.json({code:400,message:"Please Enter OTP First."})
+	}
+	else
+	{
+		UserSchema.findOne({Email:req.body.Email},{Password:0},function(err,result)
+		{
+			if(err)
+			{
+				res.json({code:400,message:"Server Error."});
+			}
+			else
+			{
+				if(result.otp==req.body.otp)
+				{
+					result.otpStatus="verfied";
+					result.save(function(err,result)
+					{
+						if(err)
+						{
+							res.json({code:400,message:"Data Not Found."});
+						}
+						else
+						{
+							res.json({code:200,message:"OTP Veified."});
+						}
+
+					});
+				}
+				else
+				{
+					res.json({code:401,message:"Incorrect OTP."})
+				}
+			}
+		})
+	}
+}
+exports.updatePwd = function(req,res){
+	UserSchema.findOneAndUpdate({Email:req.body.Email},{$set:{Password:req.body.Password}},{new:true}, function(err, updateResult){
+		if(err){
+			res.send({code:400, message: "Interl Server Error."});
+			console.log(err);
+		}else{
+			return res.json({code:202, message:"Password Updated.",Password:req.body.Password});
+		}
+	})
+
+}
+
+//------------------------------------------------user_action.js end -----------------------------------------------------------//
